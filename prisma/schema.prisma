@@ -12,3 +12,53 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Article {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  summary     String?
+  content     Json
+  status      ArticleStatus @default(DRAFT)
+  publishedAt DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  content     Json?
+  githubUrl   String?
+  liveUrl     String?
+  featured    Boolean  @default(false)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+}
+
+model Media {
+  id          String   @id @default(uuid())
+  url         String
+  mimeType    String
+  size        Int
+  status      MediaStatus @default(TEMP)
+  attachedTo  String?
+
+  createdAt   DateTime @default(now())
+  deletedAt   DateTime?
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum MediaStatus {
+  TEMP
+  ACTIVE
+}
