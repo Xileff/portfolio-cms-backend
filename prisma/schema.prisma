@@ -14,6 +14,7 @@ datasource db {
 }
 
 model Article {
+  @@map("articles")
   id          String   @id @default(uuid())
   title       String
   slug        String   @unique
@@ -28,6 +29,7 @@ model Article {
 }
 
 model Project {
+  @@map("projects")
   id          String   @id @default(uuid())
   title       String
   description String
@@ -42,6 +44,7 @@ model Project {
 }
 
 model Media {
+  @@map("medias")
   id          String   @id @default(uuid())
   url         String
   mimeType    String
