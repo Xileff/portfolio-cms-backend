@@ -47,8 +47,7 @@ model Media {
   @@map("medias")
   id          String   @id @default(uuid())
   url         String
-  mimeType    String
-  size        Int
+  metadata Json?
   status      MediaStatus @default(TEMP)
   attachedTo  String?
 
