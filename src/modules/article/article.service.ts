@@ -1,12 +1,13 @@
-import { prismaClient } from '../../config/db';
+import { Prisma } from 'src/generated/prisma/client';
+import { articleRepository } from './article.repository';
 import { CreateArticleRequest } from './article.schema';
 
-export const createArticle = async (req: CreateArticleRequest) => {
-  return prismaClient.article.create({
-    data: {
-      title: req.title,
-      content: req.content,
-      slug: 'slug',
-    },
+export const createArticle = async (data: CreateArticleRequest) => {
+  const slug = data.title.toLowerCase().replace(/\s+/g, '-');
+
+  return articleRepository.create({
+    ...data,
+    slug,
+    content: data.content as Prisma.InputJsonValue,
   });
 };
