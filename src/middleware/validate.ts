@@ -14,12 +14,7 @@ export const validate =
       }
 
       next();
-    } catch (error: any) {
-      const response: BaseResponse<{}> = {
-        message: 'Validation failed',
-        data: error.errors,
-      };
-
-      return res.status(400).json(response);
+    } catch (error) {
+      next(error);
     }
   };
