@@ -3,15 +3,15 @@ import { ZodError, ZodObject } from 'zod';
 import { BaseResponse } from '../common/base-response';
 
 export const validate =
-  (schema: ZodObject) => (req: Request, res: Response, next: NextFunction) => {
+  (args: { querySchema?: ZodObject; paramsSchema?: ZodObject; bodySchema?: ZodObject }) =>
+  (req: Request, res: Response, next: NextFunction) => {
     try {
-      const parsed = schema.parse({
-        body: req.body,
-        query: req.query,
-        params: req.params,
-      });
+      const { bodySchema, paramsSchema, querySchema } = args;
 
-      req.body = parsed.body;
+      if (bodySchema) {
+        const parsedBody = bodySchema.parse(req.body);
+        req.body = parsedBody;
+      }
 
       next();
     } catch (error: any) {

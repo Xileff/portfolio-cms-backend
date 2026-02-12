@@ -1,7 +1,7 @@
 import { prismaClient } from '../../config/db';
-import { CreateArticleRequestBody } from './article.schema';
+import { CreateArticleRequest } from './article.schema';
 
-export const createArticle = async (req: CreateArticleRequestBody) => {
+export const createArticle = async (req: CreateArticleRequest) => {
   return prismaClient.article.create({
     data: {
       title: req.title,
