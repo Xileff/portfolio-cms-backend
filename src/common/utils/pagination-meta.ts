@@ -1,4 +1,4 @@
-import { PaginationMeta } from '../common/types/pagination';
+import { PaginationMeta } from '../types/pagination';
 
 export const buildPaginationMeta = (page: number, limit: number, total: number): PaginationMeta => {
   return {
