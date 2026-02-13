@@ -2,11 +2,12 @@ import { Request, Response } from 'express';
 import * as articleService from './article.service';
 import { PaginationQuery } from 'src/common/schemas/pagination.schema';
 import { CreateArticleRequest } from './article.schema';
-import { ValidatedRequest } from 'src/common/types/validated-request';
+import { ValidatedRequest } from '../../common/types/validated-request';
+import { successResponse } from '../../common/response/response';
 
 export const createArticle = async (req: ValidatedRequest<CreateArticleRequest>, res: Response) => {
   const article = await articleService.createArticle(req.validated.body);
-  res.json(article);
+  res.json(successResponse({ data: article, message: 'Article created successfully' }));
 };
 
 export const getArticles = async (
@@ -15,7 +16,7 @@ export const getArticles = async (
 ) => {
   const { page, limit } = req.validated.query;
 
-  const result = await articleService.getArticles(Number(page), Number(limit));
+  const result = await articleService.getArticles({ page: Number(page), limit: Number(limit) });
 
-  res.json(result);
+  res.json(successResponse({ data: result, message: 'Articles retrieved succesfully' }));
 };

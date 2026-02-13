@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../errors/app-error';
 import { ZodError } from 'zod';
+import { errorResponse } from '../common/response/response';
 
 export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof ZodError) {
@@ -14,14 +15,10 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
   }
 
   if (err instanceof AppError) {
-    return res.status(err.statusCode).json({
-      message: err.message,
-    });
+    return res.status(err.statusCode).json(errorResponse({ message: err.message }));
   }
 
   console.error(err);
 
-  return res.status(500).json({
-    message: 'Internal server error',
-  });
+  return res.status(500).json(errorResponse({ message: 'Internal Server Error' }));
 };

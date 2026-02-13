@@ -7,5 +7,5 @@ export type PaginationMeta = {
 
 export type PaginatedResponse<T> = {
   data: T[];
-  meta: PaginationMeta;
+  paginationMeta: PaginationMeta;
 };

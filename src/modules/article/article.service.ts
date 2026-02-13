@@ -4,6 +4,8 @@ import { CreateArticleRequest } from './article.schema';
 import { mapArticleToDTO } from './article.mapper';
 import { getPaginationParams } from '../../common/utils/pagination';
 import { buildPaginationMeta } from '../../common/utils/pagination-meta';
+import { ArticleResponseDTO } from './article.dto';
+import { PaginatedResponse } from '../../common/types/pagination';
 
 export const createArticle = async (data: CreateArticleRequest) => {
   const slug = data.title.toLowerCase().replace(/\s+/g, '-');
@@ -17,13 +19,16 @@ export const createArticle = async (data: CreateArticleRequest) => {
   return mapArticleToDTO(article);
 };
 
-export const getArticles = async (page: number, limit: number) => {
-  const { skip, take } = getPaginationParams(page, limit);
+export const getArticles = async (args: {
+  page: number;
+  limit: number;
+}): Promise<PaginatedResponse<ArticleResponseDTO>> => {
+  const { skip, take } = getPaginationParams(args.page, args.limit);
 
   const { articles, total } = await articleRepository.findPaginated({ skip, take });
 
   return {
     data: articles.map(mapArticleToDTO),
-    meta: buildPaginationMeta(page, limit, total),
+    paginationMeta: buildPaginationMeta(args.page, args.limit, total),
   };
 };
