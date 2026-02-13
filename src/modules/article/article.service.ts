@@ -2,6 +2,8 @@ import { Prisma } from 'src/generated/prisma/client';
 import { articleRepository } from './article.repository';
 import { CreateArticleRequest } from './article.schema';
 import { mapArticleToDTO } from './article.mapper';
+import { getPaginationParams } from '../../utils/pagination';
+import { buildPaginationMeta } from '../../utils/pagination-meta';
 
 export const createArticle = async (data: CreateArticleRequest) => {
   const slug = data.title.toLowerCase().replace(/\s+/g, '-');
@@ -13,4 +15,15 @@ export const createArticle = async (data: CreateArticleRequest) => {
   });
 
   return mapArticleToDTO(article);
+};
+
+export const getArticles = async (page: number, limit: number) => {
+  const { skip, take } = getPaginationParams(page, limit);
+
+  const { articles, total } = await articleRepository.findPaginated({ skip, take });
+
+  return {
+    data: articles.map(mapArticleToDTO),
+    meta: buildPaginationMeta(page, limit, total),
+  };
 };

@@ -17,4 +17,15 @@ export const articleRepository = {
   findAll: () => {
     return prismaClient.article.findMany();
   },
+
+  findPaginated: async (args: { skip: number; take: number; search?: string }) => {
+    const { skip, take, search } = args;
+
+    const [articles, total] = await Promise.all([
+      prismaClient.article.findMany({ skip, take }),
+      prismaClient.article.count(),
+    ]);
+
+    return { articles, total };
+  },
 };

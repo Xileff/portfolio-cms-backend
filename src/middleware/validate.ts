@@ -1,17 +1,29 @@
 import { NextFunction, Request, Response } from 'express';
-import { ZodError, ZodObject } from 'zod';
-import { BaseResponse } from '../common/base-response';
+import { ZodObject } from 'zod';
 
 export const validate =
-  (args: { querySchema?: ZodObject; paramsSchema?: ZodObject; bodySchema?: ZodObject }) =>
+  <TBody = unknown, TQuery = unknown, TParams = unknown>(args: {
+    bodySchema?: ZodObject;
+    querySchema?: ZodObject;
+    paramsSchema?: ZodObject;
+  }) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { bodySchema, paramsSchema, querySchema } = args;
+      const validated: any = {};
 
-      if (bodySchema) {
-        const parsedBody = bodySchema.parse(req.body);
-        req.body = parsedBody;
+      if (args.bodySchema) {
+        validated.body = args.bodySchema.parse(req.body);
       }
+
+      if (args.querySchema) {
+        validated.query = args.querySchema.parse(req.query);
+      }
+
+      if (args.paramsSchema) {
+        validated.params = args.paramsSchema.parse(req.params);
+      }
+
+      (req as any).validated = validated;
 
       next();
     } catch (error) {
