@@ -25,6 +25,9 @@ export const validate =
 
       (req as any).validated = validated;
 
+      console.log(req.url);
+      console.log(validated);
+
       next();
     } catch (error) {
       next(error);

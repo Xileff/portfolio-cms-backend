@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { validate } from '../../middleware/validate';
 import { CreateArticleRequest, createArticleSchema } from './article.schema';
 import * as controller from './article.controller';
-import { PaginationQuery, paginationSchema } from '../../common/schemas/pagination.schema';
+import { PaginationQuerySchema, paginationSchema } from '../../common/schemas/pagination.schema';
 import { withValidated } from '../../middleware/validated-handler';
 
 const articleRouter = Router();
@@ -16,7 +16,7 @@ articleRouter.post(
 articleRouter.get(
   '/article',
   validate({ querySchema: paginationSchema }),
-  withValidated<unknown, PaginationQuery>(controller.getArticles),
+  withValidated<unknown, PaginationQuerySchema>(controller.getArticles),
 );
 
 export default articleRouter;
